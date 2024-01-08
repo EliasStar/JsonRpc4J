@@ -24,6 +24,7 @@ import java.util.Optional;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -47,11 +48,11 @@ public final class OptionalTypeAdapterTests {
 
         testObj.testOptional = Optional.of("test");
         assertEquals("{\"testOptional\":\"test\"}", gson.toJson(testObj));
-        assertEquals("{\"testString\":null,\"testOptional\":\"test\"}", gsonWithNulls.toJson(testObj));
+        assertEquals(gsonWithNulls.fromJson("{\"testString\":null,\"testOptional\":\"test\"}", JsonObject.class), gsonWithNulls.fromJson(gsonWithNulls.toJson(testObj), JsonObject.class));
 
         testObj.testString = "test";
-        assertEquals("{\"testString\":\"test\",\"testOptional\":\"test\"}", gson.toJson(testObj));
-        assertEquals("{\"testString\":\"test\",\"testOptional\":\"test\"}", gsonWithNulls.toJson(testObj));
+        assertEquals(gson.fromJson("{\"testString\":\"test\",\"testOptional\":\"test\"}", JsonObject.class), gson.fromJson(gson.toJson(testObj), JsonObject.class));
+        assertEquals(gsonWithNulls.fromJson("{\"testString\":\"test\",\"testOptional\":\"test\"}", JsonObject.class), gsonWithNulls.fromJson(gsonWithNulls.toJson(testObj), JsonObject.class));
 
         testObj.testOptional = Optional.empty();
         assertEquals("{\"testString\":\"test\"}", gson.toJson(testObj));
